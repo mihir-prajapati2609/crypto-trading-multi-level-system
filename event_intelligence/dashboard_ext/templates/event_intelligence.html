@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}System - AI Terminal{% endblock %}
+
+{% block content %}
+<div class="terminal-container">
+    
+    <!-- TERMINAL HEADER -->
+    <div class="term-header">
+        <div class="term-title">
+            <span class="term-cursor">_</span> AI EVENT INTELLIGENCE MATRIX
+        </div>
+        <div class="term-stats">
+            <div>MODE: <span id="ei-mode" class="term-val highlight">--</span></div>
+            <div>SYS_STATUS: <span id="ei-status" class="term-val highlight">--</span></div>
+            <div>DATA_STREAMS: <span id="sources-active" class="term-val">0/0</span></div>
+            <div>FNG_INDEX: <span id="fear-greed" class="term-val text-neon-green">--</span> <span id="fng-emoji">--</span></div>
+        </div>
+    </div>
+
+    <div class="term-grid">
+        <!-- LEFT COLUMN: LIVE TICKER -->
+        <div class="term-pane ticker-pane">
+            <div class="pane-header">[ RAW_EVENT_STREAM ]</div>
+            <div class="pane-body ticker-body" id="event-feed">
+                <!-- Ticker items -->
+                <div class="term-empty">AWAITING_DATA...</div>
+            </div>
+        </div>
+
+        <!-- MIDDLE COLUMN: SCORE MATRIX -->
+        <div class="term-pane score-pane">
+            <div class="pane-header">[ SIGNAL_MATRIX ]</div>
+            <div class="pane-body matrix-body">
+                <table class="term-table">
+                    <thead>
+                        <tr>
+                            <th>TGT</th>
+                            <th>ACT</th>
+                            <th>AI_CONF</th>
+                            <th>VOL</th>
+                            <th>SRC_REL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="score-cards">
+                        <tr><td colspan="5" class="term-empty">NO_SIGNALS_DETECTED</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: EXECUTION LEDGER -->
+        <div class="term-pane ledger-pane">
+            <div class="pane-header">[ EXEC_LEDGER ]</div>
+            <div class="pane-stats">
+                <div class="stat-row">OPEN_POS: <span id="open-trades" class="term-val">0/0</span></div>
+                <div class="stat-row">24H_PNL: <span id="today-pnl" class="term-val highlight">$0.00</span></div>
+                <div class="stat-row">WIN_RATE: <span id="win-rate" class="term-val">0%</span></div>
+            </div>
+            <div class="pane-body ledger-body">
+                <table class="term-table">
+                    <thead>
+                        <tr>
+                            <th>TIME</th>
+                            <th>SYM</th>
+                            <th>ACT</th>
+                            <th>PNL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ei-trades-body">
+                        <tr><td colspan="4" class="term-empty">NO_EXECUTIONS</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/events/static/css/event_intelligence.css?v=3.0">
+{% endblock %}
+
+{% block extra_js %}
+<script src="/events/static/js/event_intelligence.js?v=3.0"></script>
+{% endblock %}

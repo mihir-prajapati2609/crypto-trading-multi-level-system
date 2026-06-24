@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Onyx Explorer{% endblock %}</title>
+    <!-- Fonts: Orbitron, Exo 2, Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/static/css/dashboard.css?v=2.1">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="layout-wrapper">
+        <!-- LEFT SIDEBAR -->
+        <nav class="sidebar">
+            <div class="brand" style="justify-content: center; padding: 20px 0;">
+                <div class="brand-name" style="font-size: 14px; letter-spacing: 2px; color: var(--text-muted);">SYSTEM ADMIN</div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="/" class="nav-item {% if request.url.path == '/' %}active{% endif %}">
+                    <!-- Chart Icon -->
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M3 3v18h18M9 15l3-3 4 4 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    Market Movements
+                </a>
+                <a href="/account" class="nav-item {% if request.url.path == '/account' %}active{% endif %}">
+                    <!-- Wallet/Account Icon -->
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5m-4 0h4m-4 0v-2h4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    Account Summary
+                </a>
+                <a href="/events/" class="nav-item {% if request.url.path.startswith('/events') %}active{% endif %}">
+                    <!-- AI Brain Icon -->
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v4m0 4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    AI Intelligence
+                </a>
+                <a href="/opportunities" class="nav-item {% if request.url.path.startswith('/opportunities') %}active{% endif %}">
+                    <!-- Target Icon -->
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+                    AI Opportunities
+                </a>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- TOP HEADER -->
+            <header class="top-header">
+                <div>
+                    <!-- Empty div to push network badges to the right -->
+                </div>
+                
+                <div class="header-actions">
+                    <div class="network-badge">
+                        <div class="network-dot" id="conn-dot"></div>
+                        <span id="conn-status">Connecting...</span>
+                    </div>
+                    <div class="network-badge" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3);">
+                        <span class="text-cyan font-orbitron" id="mode-status" style="font-size: 11px;">PAPER</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="page-container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Base JS functionality -->
+    <script>
+        // Update connection status
+        async function updateBaseStatus() {
+            try {
+                const resp = await fetch('/api/status');
+                if (resp.ok) {
+                    const data = await resp.json();
+                    document.getElementById('conn-status').textContent = 'Connected';
+                    document.getElementById('conn-dot').style.background = '#00FF9D';
+                    document.getElementById('conn-dot').style.boxShadow = '0 0 8px #00FF9D';
+                    document.getElementById('mode-status').textContent = (data.trading_mode || 'PAPER').toUpperCase();
+                } else {
+                    document.getElementById('conn-status').textContent = 'Disconnected';
+                    document.getElementById('conn-dot').style.background = '#FF3366';
+                    document.getElementById('conn-dot').style.boxShadow = '0 0 8px #FF3366';
+                }
+            } catch (e) {
+                document.getElementById('conn-status').textContent = 'Disconnected';
+                document.getElementById('conn-dot').style.background = '#FF3366';
+                document.getElementById('conn-dot').style.boxShadow = '0 0 8px #FF3366';
+            }
+        }
+        setInterval(updateBaseStatus, 3000);
+        updateBaseStatus();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

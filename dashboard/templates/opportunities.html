@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}System - AI Crypto Opportunity Dashboard{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px; min-height: calc(100vh - 120px);">
+    <div class="onyx-panel" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+        <div class="panel-header" style="padding: 24px; border-bottom: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2);">
+            <div class="flex-between">
+                <div>
+                    <h2 class="panel-title font-orbitron" style="color: var(--accent-cyan); font-size: 24px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; color: var(--accent-cyan);"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+                        AI CRYPTO OPPORTUNITY DASHBOARD
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin: 0; font-family: 'Inter', sans-serif;">
+                        Predicting the next explosion (20% - 100% pump) before the majority notices. Prices are abstracted.
+                    </p>
+                </div>
+                <div class="network-badge" style="background: rgba(0, 255, 157, 0.1); border-color: rgba(0, 255, 157, 0.3);">
+                    <div class="network-dot" style="background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></div>
+                    <span class="text-green font-orbitron" style="font-size: 12px; font-weight: 600; letter-spacing: 1px;">AI MODEL ONLINE</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="onyx-table-container" style="flex: 1; padding: 20px;">
+            <table class="onyx-table massive-table" style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
+                <thead>
+                    <tr style="text-align: left; color: var(--text-muted); font-family: 'Orbitron', sans-serif; font-size: 12px; letter-spacing: 1px;">
+                        <th style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">COIN</th>
+                        <th style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">SCORE</th>
+                        <th style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">PROBABILITY</th>
+                        <th style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1);">STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="opportunities-body">
+                    <!-- Data populated by JS or rendered server-side -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const tbody = document.getElementById("opportunities-body");
+        
+        try {
+            const resp = await fetch('/api/opportunities');
+            if (resp.ok) {
+                const opportunities = await resp.json();
+                tbody.innerHTML = '';
+                
+                opportunities.forEach(opp => {
+                    // Determine colors based on status
+                    let statusColor = 'var(--text-muted)';
+                    let statusBg = 'rgba(255,255,255,0.05)';
+                    let barColor = 'var(--accent-cyan)';
+                    
+                    if (opp.status.includes('Ready')) {
+                        statusColor = '#00FF9D';
+                        statusBg = 'rgba(0, 255, 157, 0.1)';
+                        barColor = '#00FF9D';
+                    } else if (opp.status.includes('Building')) {
+                        statusColor = '#F59E0B';
+                        statusBg = 'rgba(245, 158, 11, 0.1)';
+                        barColor = '#F59E0B';
+                    } else if (opp.status.includes('Accumulation')) {
+                        statusColor = '#8B5CF6';
+                        statusBg = 'rgba(139, 92, 246, 0.1)';
+                        barColor = '#8B5CF6';
+                    } else if (opp.status.includes('Watch')) {
+                        statusColor = '#3B82F6';
+                        statusBg = 'rgba(59, 130, 246, 0.1)';
+                        barColor = '#3B82F6';
+                    }
+                    
+                    const row = document.createElement('tr');
+                    row.style.background = 'rgba(20, 25, 35, 0.6)';
+                    row.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                    row.onmouseenter = () => {
+                        row.style.transform = 'translateY(-2px)';
+                        row.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+                    };
+                    row.onmouseleave = () => {
+                        row.style.transform = 'none';
+                        row.style.boxShadow = 'none';
+                    };
+                    
+                    row.innerHTML = `
+                        <td style="padding: 20px 24px; border-radius: 8px 0 0 8px; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; color: #fff;">
+                            ${opp.coin}
+                        </td>
+                        <td style="padding: 20px 24px; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 600; color: ${barColor};">
+                            ${opp.score}
+                        </td>
+                        <td style="padding: 20px 24px;">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 500; color: #fff; width: 50px;">
+                                    ${opp.probability}%
+                                </div>
+                                <div style="flex: 1; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; max-width: 200px;">
+                                    <div style="height: 100%; width: ${opp.probability}%; background: ${barColor}; box-shadow: 0 0 10px ${barColor}; border-radius: 4px; transition: width 1s ease-in-out;"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 20px 24px; border-radius: 0 8px 8px 0;">
+                            <span style="display: inline-block; padding: 8px 16px; border-radius: 20px; background: ${statusBg}; color: ${statusColor}; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; border: 1px solid rgba(255,255,255,0.05);">
+                                ${opp.status}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        } catch (e) {
+            console.error("Failed to load opportunities", e);
+        }
+    });
+</script>
+{% endblock %}

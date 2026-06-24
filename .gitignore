@@ -1,0 +1,25 @@
+# Virtual Environment
+.venv/
+__pycache__/
+*.pyc
+
+# Local Environment / Secrets
+.env
+
+# Databases and Local Data
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Logs
+logs/
+*.log
+
+# IDE & Agent Configs
+.agent/
+.vscode/
+.idea/
+deploy_to_github.py

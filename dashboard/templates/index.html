@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}System - Circular Strategy Engine{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px; min-height: calc(100vh - 120px);">
+    
+    <!-- TOP PANEL: Circular Strategy Engine -->
+    <div class="onyx-panel" style="position: relative; height: 460px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+        
+        <!-- The Center Globe -->
+        <div class="cyber-globe" id="central-globe">
+            <div class="globe-core"></div>
+            <div class="globe-ring ring-1"></div>
+            <div class="globe-ring ring-2"></div>
+            <div class="globe-text font-orbitron">CORE</div>
+        </div>
+
+        <!-- The Lasers (Originating from center) -->
+        <div class="laser-spoke" style="transform: rotate(0deg);"><div class="laser-beam" id="laser-0"></div></div>
+        <div class="laser-spoke" style="transform: rotate(60deg);"><div class="laser-beam" id="laser-60"></div></div>
+        <div class="laser-spoke" style="transform: rotate(120deg);"><div class="laser-beam" id="laser-120"></div></div>
+        <div class="laser-spoke" style="transform: rotate(180deg);"><div class="laser-beam" id="laser-180"></div></div>
+        <div class="laser-spoke" style="transform: rotate(240deg);"><div class="laser-beam" id="laser-240"></div></div>
+        <div class="laser-spoke" style="transform: rotate(300deg);"><div class="laser-beam" id="laser-300"></div></div>
+
+        <!-- Strategy 1: Cross-Exchange (Top) -->
+        <div class="compact-scan-card" id="card-0" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg) translateY(-180px) rotate(0deg);">
+            <div class="flex-between">
+                <span class="scan-title text-cyan">Cross-Exchange</span>
+                <span class="badge badge-scan">ON</span>
+            </div>
+            <div class="scan-metric-val font-orbitron text-primary" id="card-ce-spread">0.000%</div>
+            <div class="scan-bar-bg"><div class="scan-bar-fill" id="card-ce-bar" style="width: 5%; background: var(--accent-cyan);"></div></div>
+        </div>
+
+        <!-- Strategy 2: Funding Rate (Top Right) -->
+        <div class="compact-scan-card" id="card-60" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(60deg) translateY(-180px) rotate(-60deg);">
+            <div class="flex-between">
+                <span class="scan-title text-purple">Funding Rate</span>
+                <span class="badge badge-scan">ON</span>
+            </div>
+            <div class="scan-metric-val font-orbitron text-primary" id="card-fr-imbalance">0.000%</div>
+            <div class="scan-bar-bg"><div class="scan-bar-fill" id="card-fr-bar" style="width: 10%; background: var(--accent-purple);"></div></div>
+        </div>
+
+        <!-- Strategy 3: Triangular (Bottom Right) -->
+        <div class="compact-scan-card" id="card-120" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(120deg) translateY(-180px) rotate(-120deg);">
+            <div class="flex-between">
+                <span class="scan-title text-green">Triangular</span>
+                <span class="badge badge-scan">ON</span>
+            </div>
+            <div class="scan-metric-val font-orbitron text-primary" id="card-tri-profit">0.000%</div>
+            <div class="scan-bar-bg"><div class="scan-bar-fill" id="card-tri-bar" style="width: 20%; background: var(--accent-green);"></div></div>
+        </div>
+
+        <!-- Strategy 4: RSI Reversion (Bottom) -->
+        <div class="compact-scan-card" id="card-180" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(180deg) translateY(-180px) rotate(-180deg);">
+            <div class="flex-between">
+                <span class="scan-title" style="color: #A78BFA;">RSI Rev</span>
+                <span class="badge badge-scan">ON</span>
+            </div>
+            <div class="scan-metric-val font-orbitron text-primary" id="card-rsi-slots">0/2</div>
+            <div class="scan-bar-bg"><div class="scan-bar-fill" id="card-rsi-bar" style="width: 0%; background: #A78BFA;"></div></div>
+        </div>
+
+        <!-- Strategy 5: AI Multi-Coin (Bottom Left) -->
+        <div class="compact-scan-card" id="card-240" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(240deg) translateY(-180px) rotate(-240deg);">
+            <div class="flex-between">
+                <span class="scan-title" style="color: #F472B6;">AI Multi-Coin</span>
+                <span class="badge badge-scan">ON</span>
+            </div>
+            <div class="scan-metric-val font-orbitron text-primary" id="card-ai-prob">0.00%</div>
+            <div class="scan-bar-bg"><div class="scan-bar-fill" id="card-ai-bar" style="width: 0%; background: #F472B6;"></div></div>
+        </div>
+
+        <!-- Strategy 6: Rotation (Top Left) -->
+        <div class="compact-scan-card active-scan-card" id="card-300" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(300deg) translateY(-180px) rotate(-300deg);">
+            <div class="flex-between">
+                <span class="scan-title text-yellow">⭐ Rotation</span>
+                <span class="badge badge-scan-active">ON</span>
+            </div>
+            <div class="scan-metric-val font-orbitron text-yellow" id="card-rot-slots">0/5</div>
+            <div class="scan-bar-bg"><div class="scan-bar-fill" id="card-rot-bar" style="width: 0%; background: #F59E0B; box-shadow: 0 0 8px #F59E0B;"></div></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM PANEL: Massive Market Feed -->
+    <div class="onyx-panel" style="flex: 1; min-height: 400px; display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+        <div class="panel-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2);">
+            <div class="flex-between">
+                <h3 class="panel-title font-orbitron" style="color: var(--accent-cyan); display: flex; align-items: center; gap: 10px;">
+                    <div class="network-dot"></div> Live Screener Feed
+                </h3>
+                <div style="display: flex; gap: 15px; font-size: 12px; color: var(--text-muted);">
+                    <span>Total Evaluated: <span id="feed-evaluated" class="font-orbitron text-primary">0</span></span>
+                    <span>Valid Targets: <span id="feed-valid" class="font-orbitron text-cyan">0</span></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="onyx-table-container" style="flex: 1; overflow-y: auto;">
+            <table class="onyx-table massive-table">
+                <thead style="position: sticky; top: 0; background: var(--bg-surface); z-index: 10;">
+                    <tr>
+                        <th>Time</th>
+                        <th>Symbol</th>
+                        <th>Volume (24h)</th>
+                        <th>Spread / Metric</th>
+                        <th>Volatility</th>
+                        <th>Strategy Fire</th>
+                        <th>AI Confidence</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="massive-feed-body">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/dashboard.js?v=3.0"></script>
+{% endblock %}
